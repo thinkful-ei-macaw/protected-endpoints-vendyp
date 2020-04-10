@@ -6,6 +6,8 @@ import { Hyph, Section } from '../../components/Utils/Utils'
 import { ThingStarRating } from '../../components/ThingStarRating/ThingStarRating'
 import ReviewForm from '../../components/ReviewForm/ReviewForm'
 import './ThingPage.css'
+import TokenService from '../../services/token-service'
+import { Redirect } from 'react-router-dom'
 
 export default class ThingPage extends Component {
   static defaultProps = {
@@ -41,6 +43,14 @@ export default class ThingPage extends Component {
   }
 
   render() {
+
+    if(!TokenService.hasAuthToken()){
+      return <Redirect
+      to={{
+        pathname: '/login',
+      }}/>
+    }
+
     const { error, thing } = this.context
     let content
     if (error) {

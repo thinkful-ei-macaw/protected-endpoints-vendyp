@@ -51,7 +51,7 @@ describe.only('Things Endpoints', function () {
           const userNoCreds = { user_name: '', pasword: '' };
           return supertest(app)
             .get(endpoint.path)
-            .set('Authorization', makeAuthHeader(userNoCreds))
+            .set('Authorization', helpers.makeAuthHeader(userNoCreds))
             .expect(401, { error: `Unauthorized request` });
         });
         it(`responds 401 'Unauthorized request' when invalid user`, () => {

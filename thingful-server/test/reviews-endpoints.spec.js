@@ -38,6 +38,16 @@ describe('Reviews Endpoints', function() {
       )
     )
 
+
+    it(`responds 401 'Unauthorized request' when invalid password`, () => {
+     const userInvalidPass = { user_name: testUsers[0].user_name, password: 'wrong' }
+     return supertest(app)
+       .post('/api/comments')
+       .set('Authorization', helpers.makeAuthHeader(userInvalidPass))
+       .expect(401, { error: `Unauthorized request` })
+   })
+
+
     it(`creates an review, responding with 201 and the new review`, function() {
       this.retries(3)
       const testThing = testThings[0]
@@ -46,7 +56,6 @@ describe('Reviews Endpoints', function() {
         text: 'Test new review',
         rating: 3,
         thing_id: testThing.id,
-        user_id: testUser.id,
       }
       return supertest(app)
         .post('/api/reviews')
@@ -57,7 +66,7 @@ describe('Reviews Endpoints', function() {
           expect(res.body).to.have.property('id')
           expect(res.body.rating).to.eql(newReview.rating)
           expect(res.body.text).to.eql(newReview.text)
-          expect(res.body.thing_id).to.eql(newReview.thing_id)
+
           expect(res.body.user.id).to.eql(testUser.id)
           expect(res.headers.location).to.eql(`/api/reviews/${res.body.id}`)
           const expectedDate = new Date().toLocaleString()
@@ -82,7 +91,7 @@ describe('Reviews Endpoints', function() {
         )
     })
 
-    const requiredFields = ['text', 'rating', 'user_id', 'thing_id']
+    const requiredFields = ['text', 'rating', 'thing_id']
 
     requiredFields.forEach(field => {
       const testThing = testThings[0]
@@ -91,7 +100,6 @@ describe('Reviews Endpoints', function() {
       const newReview = {
         text: 'Test new review',
         rating: 3,
-        user_id: testUser.id,
         thing_id: testThing.id,
       }
 

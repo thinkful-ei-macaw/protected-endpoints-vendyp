@@ -4,7 +4,6 @@ function requireAuth(req,res,next){
   let basicToken;
 
   if(!authToken.toLowerCase().startsWith('basic')){
-    console.log('this is first check in basic auth')
     return res.status(401).json({error: 'Missing basic token'});
   } else{
     basicToken = authToken.slice('basic'.length, authToken.length)
@@ -15,17 +14,19 @@ function requireAuth(req,res,next){
     .split(':');
 
   if(!tokenUserName || !tokenPassword){
-    console.log('this is second check in basic auth')
-    return res.status(401).json({error: 'Unauthorized request'})
+    return res.status(401).json({error: 'Unauthorized request 123'})
   }
+  console.log('looking up', tokenUserName)
   req.app.get('db')('thingful_users')
     .where({user_name:tokenUserName})
     .first()
     .then(user=>{
+      console.log(user)
+      console.log(user.password, tokenPassword)
       if (!user || user.password !== tokenPassword) {
-        console.log('this is the third check in basic auth')
-        return res.status(401).json({error:'Unauthorized request'})
+        return res.status(401).json({error:'Unauthorized request 9999'})
       }
+      req.user = user
       next()
     })
     .catch(next)
