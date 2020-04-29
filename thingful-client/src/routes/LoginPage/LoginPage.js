@@ -3,6 +3,7 @@ import LoginForm from '../../components/LoginForm/LoginForm'
 import { Section } from '../../components/Utils/Utils'
 import TokenService from '../../services/token-service'
 import { Redirect } from 'react-router-dom'
+
 export default class LoginPage extends Component {
   static defaultProps = {
     location: {},
